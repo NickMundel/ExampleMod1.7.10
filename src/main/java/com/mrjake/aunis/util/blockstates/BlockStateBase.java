@@ -53,7 +53,7 @@ public abstract class BlockStateBase implements IBlockState {
         if (!this.getProperties().isEmpty()) {
             stringbuilder.append("[");
             COMMA_JOINER
-                    .appendTo(stringbuilder, Iterables.transform(this.getProperties().entrySet(), MAP_ENTRY_TO_STRING));
+                .appendTo(stringbuilder, Iterables.transform(this.getProperties().entrySet(), MAP_ENTRY_TO_STRING));
             stringbuilder.append("]");
         }
 

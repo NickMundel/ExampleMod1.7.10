@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.mrjake.aunis.util.BaseBlockUtils.getStateFromMeta;
+import static com.mrjake.aunis.util.BaseUtils.getBlockStateFromMeta;
 
 public class BlockMetaParser {
 
@@ -51,7 +51,7 @@ public class BlockMetaParser {
         	//if (parts.length == 2 || parts[2].equals("*"))
         	//	return block.getDefaultState();
 
-            return getStateFromMeta(block, Integer.parseInt(parts[2]));
+            return getBlockStateFromMeta(block, Integer.parseInt(parts[2]));
         }
 
         return null;

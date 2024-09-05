@@ -31,15 +31,15 @@ public class StateImplementation extends BlockStateBase {
             throw new IllegalArgumentException("Cannot set property " + property + " as it does not exist in " + this);
         } else if (!property.getAllowedValues().contains(value)) {
             throw new IllegalArgumentException(
-                    "Cannot set property " + property
-                            + " to "
-                            + value
-                            + " on block "
-                            + Block.blockRegistry.getNameForObject(this.block)
-                            + ", it is not an allowed value");
+                "Cannot set property " + property
+                    + " to "
+                    + value
+                    + " on block "
+                    + Block.blockRegistry.getNameForObject(this.block)
+                    + ", it is not an allowed value");
         } else {
             return (IBlockState) (this.properties.get(property) == value ? this
-                    : (IBlockState) this.propertyValueTable.get(property, value));
+                : (IBlockState) this.propertyValueTable.get(property, value));
         }
     }
 
@@ -64,7 +64,7 @@ public class StateImplementation extends BlockStateBase {
             throw new IllegalStateException();
         } else {
             Table<IProperty, Comparable, IBlockState> table = HashBasedTable
-                    .<IProperty, Comparable, IBlockState>create();
+                .<IProperty, Comparable, IBlockState>create();
 
             for (IProperty<? extends Comparable> iproperty : this.properties.keySet()) {
                 for (Comparable comparable : iproperty.getAllowedValues()) {

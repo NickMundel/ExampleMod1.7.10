@@ -20,7 +20,7 @@ public class ItemMetaPair {
 	}
 
 	public ItemMetaPair(ItemStack stack) {
-		this(stack.getItem(), BaseBlockUtils.getMetaFromItemStack(stack));
+		this(stack.getItem(), BaseUtils.getMetaFromItemStack(stack));
 	}
 
 
@@ -32,7 +32,7 @@ public class ItemMetaPair {
 		if (item != stack.getItem())
 			return false;
 
-		if (meta != BaseBlockUtils.getMetaFromItemStack(stack))
+		if (meta != BaseUtils.getMetaFromItemStack(stack))
 			return false;
 
 		return true;

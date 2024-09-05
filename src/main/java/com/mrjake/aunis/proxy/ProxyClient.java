@@ -97,4 +97,6 @@ public class ProxyClient implements IProxy {
 	public void openGui(GuiScreen gui) {
 		Minecraft.getMinecraft().displayGuiScreen(gui);
 	}
+
+
 }

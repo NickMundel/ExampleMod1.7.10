@@ -1,5 +1,7 @@
 package com.mrjake.aunis;
 
+import com.mrjake.aunis.block.AunisBlocks;
+import com.mrjake.aunis.item.AunisItems;
 import com.mrjake.aunis.proxy.IProxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,8 @@ public class Aunis {
     public static final String CLIENT = "com.mrjake.aunis.proxy.ProxyClient";
     public static final String SERVER = "com.mrjake.aunis.proxy.ProxyServer";
 
+    public static final AunisCreativeTab aunisCreativeTab = new AunisCreativeTab();
+
     @SidedProxy(clientSide = Aunis.CLIENT, serverSide = Aunis.SERVER)
     public static IProxy proxy;
 
@@ -27,12 +31,15 @@ public class Aunis {
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
     // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
+        new AunisBlocks();
+        new AunisItems();
         proxy.preInit(event);
     }
 
     @Mod.EventHandler
     // load "Do your mod setup. Build whatever data structures you care about. Register recipes." (Remove if not needed)
     public void init(FMLInitializationEvent event) {
+
         proxy.init(event);
     }
 

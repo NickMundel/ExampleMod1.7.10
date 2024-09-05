@@ -27,10 +27,10 @@ public class BlockState {
     private final ImmutableList<IBlockState> validStates;
 
     protected StateImplementation createState(Block block,
-            ImmutableMap<IProperty, Comparable> properties /*
-                                                            * , ImmutableMap<IUnlistedProperty<?>,
-                                                            * com.google.common.base.Optional<?>> unlistedProperties
-                                                            */) {
+                                              ImmutableMap<IProperty, Comparable> properties /*
+     * , ImmutableMap<IUnlistedProperty<?>,
+     * com.google.common.base.Optional<?>> unlistedProperties
+     */) {
         return new StateImplementation(block, properties);
     }
 
@@ -44,14 +44,14 @@ public class BlockState {
         });
         this.properties = ImmutableList.copyOf(properties);
         Map<Map<IProperty, Comparable>, StateImplementation> map = Maps
-                .<Map<IProperty, Comparable>, StateImplementation>newLinkedHashMap();
+            .<Map<IProperty, Comparable>, StateImplementation>newLinkedHashMap();
         List<StateImplementation> list = Lists.<StateImplementation>newArrayList();
 
         for (List<Comparable> list1 : Cartesian.cartesianProduct(this.getAllowedValues())) {
             Map<IProperty, Comparable> map1 = MapPopulator.<IProperty, Comparable>createMap(this.properties, list1);
             StateImplementation blockstate$stateimplementation = createState(
-                    blockIn,
-                    ImmutableMap.copyOf(map1) /* , unlistedProperties */);
+                blockIn,
+                ImmutableMap.copyOf(map1) /* , unlistedProperties */);
             map.put(map1, blockstate$stateimplementation);
             list.add(blockstate$stateimplementation);
         }
@@ -83,6 +83,6 @@ public class BlockState {
 
     public String toString() {
         return Objects.toStringHelper(this).add("block", Block.blockRegistry.getNameForObject(this.block))
-                .add("properties", Iterables.transform(this.properties, GET_NAME_FUNC)).toString();
+            .add("properties", Iterables.transform(this.properties, GET_NAME_FUNC)).toString();
     }
 }
