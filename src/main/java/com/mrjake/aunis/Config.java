@@ -1,4 +1,4 @@
-package com.myname.mymodid;
+package com.mrjake.aunis;
 
 import java.io.File;
 

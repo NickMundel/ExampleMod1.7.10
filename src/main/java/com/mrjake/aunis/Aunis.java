@@ -1,5 +1,6 @@
-package com.myname.mymodid;
+package com.mrjake.aunis;
 
+import com.mrjake.aunis.proxy.IProxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -10,14 +11,17 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-@Mod(modid = MyMod.MODID, version = Tags.VERSION, name = "MyMod", acceptedMinecraftVersions = "[1.7.10]")
-public class MyMod {
+@Mod(modid = Aunis.MODID, version = Tags.VERSION, name = "Aunis", acceptedMinecraftVersions = "[1.7.10]")
+public class Aunis {
 
-    public static final String MODID = "mymodid";
+    public static final String MODID = "aunis";
     public static final Logger LOG = LogManager.getLogger(MODID);
 
-    @SidedProxy(clientSide = "com.myname.mymodid.ClientProxy", serverSide = "com.myname.mymodid.CommonProxy")
-    public static CommonProxy proxy;
+    public static final String CLIENT = "com.mrjake.aunis.proxy.ProxyClient";
+    public static final String SERVER = "com.mrjake.aunis.proxy.ProxyServer";
+
+    @SidedProxy(clientSide = Aunis.CLIENT, serverSide = Aunis.SERVER)
+    public static IProxy proxy;
 
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
@@ -41,6 +45,6 @@ public class MyMod {
     @Mod.EventHandler
     // register server commands in this event handler (Remove if not needed)
     public void serverStarting(FMLServerStartingEvent event) {
-        proxy.serverStarting(event);
+        //proxy.serverStarting(event);
     }
 }
