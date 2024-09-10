@@ -2,6 +2,8 @@ package com.mrjake.aunis.block;
 
 import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.AunisCreativeTab;
+import com.mrjake.aunis.block.stargate.StargateMilkyWayBaseBlock;
+import com.mrjake.aunis.block.stargate.StargateMilkyWayMemberBlock;
 import com.mrjake.aunis.util.BaseUtils;
 import com.mrjake.aunis.util.IBlock;
 import com.mrjake.aunis.util.blocks.BaseBlock;
@@ -25,9 +27,18 @@ public class AunisBlocks {
     public static List<Block> registeredBlocks = new ArrayList<Block>();
 
     public static final Block NAQUADAH_BLOCK = newBlock("naquadah_block", NaquadahBlock.class);
+    public static final InvisibleBlock INVISIBLE_BLOCK = newBlock("invisible_block", InvisibleBlock.class);
+
+    public static final StargateMilkyWayBaseBlock STARGATE_MILKY_WAY_BASE_BLOCK = newBlock("stargate_milkyway_base_block", StargateMilkyWayBaseBlock.class);
+    public static final StargateMilkyWayMemberBlock STARGATE_MILKY_WAY_MEMBER_BLOCK = newBlock("stargate_milkyway_member_block", StargateMilkyWayMemberBlock.class);
+    public static final DHDBlock DHD_BLOCK = newBlock("dhd_block", DHDBlock.class);
+
 
     private static Block[] blocks = {
         NAQUADAH_BLOCK,
+        INVISIBLE_BLOCK,
+        STARGATE_MILKY_WAY_BASE_BLOCK,
+        DHD_BLOCK
     };
 
     public static <BLOCK extends Block> BLOCK newBlock(String name, Class<BLOCK> cls) {

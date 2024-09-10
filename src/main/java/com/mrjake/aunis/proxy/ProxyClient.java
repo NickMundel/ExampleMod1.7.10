@@ -1,6 +1,9 @@
 package com.mrjake.aunis.proxy;
 
 import com.mrjake.aunis.loader.ReloadListener;
+import com.mrjake.aunis.sound.AunisSoundHelperClient;
+import com.mrjake.aunis.sound.SoundPositionedEnum;
+import com.mrjake.aunis.util.minecraft.BlockPos;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
@@ -88,10 +91,10 @@ public class ProxyClient implements IProxy {
 	//	StargateOrlinRenderer.spawnParticles(world, rendererState);
 	//}
 
-	//@Override
-	//public void playPositionedSoundClientSide(BlockPos pos, SoundPositionedEnum soundEnum, boolean play) {
-	//	AunisSoundHelperClient.playPositionedSoundClientSide(pos, soundEnum, play);
-	//}
+	@Override
+	public void playPositionedSoundClientSide(BlockPos pos, SoundPositionedEnum soundEnum, boolean play) {
+		AunisSoundHelperClient.playPositionedSoundClientSide(pos, soundEnum, play);
+	}
 
 	@Override
 	public void openGui(GuiScreen gui) {

@@ -1,5 +1,7 @@
 package com.mrjake.aunis.proxy;
 
+import com.mrjake.aunis.sound.SoundPositionedEnum;
+import com.mrjake.aunis.util.minecraft.BlockPos;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +25,7 @@ public interface IProxy {
 
     //TODO:FIX
 	//public void orlinRendererSpawnParticles(World world, StargateAbstractRendererState rendererState);
-	//public void playPositionedSoundClientSide(BlockPos pos, SoundPositionedEnum soundEnum, boolean play);
+	public void playPositionedSoundClientSide(BlockPos pos, SoundPositionedEnum soundEnum, boolean play);
 
 	public void openGui(GuiScreen gui);
 }

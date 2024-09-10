@@ -1,6 +1,7 @@
 package com.mrjake.aunis;
 
 import com.mrjake.aunis.block.AunisBlocks;
+import com.mrjake.aunis.fluid.AunisFluids;
 import com.mrjake.aunis.item.AunisItems;
 import com.mrjake.aunis.proxy.IProxy;
 import org.apache.logging.log4j.LogManager;
@@ -27,12 +28,16 @@ public class Aunis {
     @SidedProxy(clientSide = Aunis.CLIENT, serverSide = Aunis.SERVER)
     public static IProxy proxy;
 
+    @Mod.Instance(MODID)
+    public static Aunis instance;
+
     @Mod.EventHandler
     // preInit "Run before anything else. Read your config, create blocks, items, etc, and register them with the
     // GameRegistry." (Remove if not needed)
     public void preInit(FMLPreInitializationEvent event) {
         new AunisBlocks();
         new AunisItems();
+        new AunisFluids();
         proxy.preInit(event);
     }
 

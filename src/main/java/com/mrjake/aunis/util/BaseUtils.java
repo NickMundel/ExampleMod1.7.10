@@ -6,17 +6,21 @@
 
 package com.mrjake.aunis.util;
 
+import com.google.common.collect.Lists;
 import com.mrjake.aunis.util.blocks.BaseBlock;
 import com.mrjake.aunis.util.blockstates.MetaBlockState;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import com.mrjake.aunis.util.minecraft.IBlockState;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class BaseUtils {
 
@@ -105,5 +109,13 @@ public class BaseUtils {
             default:
                 return false;
         }
+    }
+
+    public static double tegetDistanceSq(TileEntity te, double x, double y, double z)
+    {
+        double d0 = (double)te.xCoord + 0.5D - x;
+        double d1 = (double)te.yCoord + 0.5D - y;
+        double d2 = (double)te.zCoord + 0.5D - z;
+        return d0 * d0 + d1 * d1 + d2 * d2;
     }
 }

@@ -12,6 +12,8 @@ public interface IProperty<T extends Comparable> {
 
     Class<T> getValueClass();
 
+    Optional<T> parseValue(String value);
+
     /**
      * Get the name for the given value.
      */

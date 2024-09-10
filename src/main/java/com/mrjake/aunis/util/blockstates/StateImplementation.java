@@ -5,6 +5,9 @@ import com.mrjake.aunis.util.minecraft.IBlockState;
 import com.mrjake.aunis.util.minecraft.IProperty;
 import net.minecraft.block.Block;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 public class StateImplementation extends BlockStateBase {
@@ -16,6 +19,11 @@ public class StateImplementation extends BlockStateBase {
     protected StateImplementation(Block blockIn, ImmutableMap<IProperty, Comparable> propertiesIn) {
         this.block = blockIn;
         this.properties = propertiesIn;
+    }
+
+    @Override
+    public Collection<IProperty<?>> getPropertyKeys() {
+        return Collections. < IProperty<? >> unmodifiableCollection((Collection<? extends IProperty<?>>) this.properties.keySet());
     }
 
     public <T extends Comparable<T>> T getValue(IProperty<T> property) {

@@ -1,5 +1,7 @@
 package com.mrjake.aunis.proxy;
 
+import com.mrjake.aunis.sound.SoundPositionedEnum;
+import com.mrjake.aunis.util.minecraft.BlockPos;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -51,8 +53,8 @@ public class ProxyServer implements IProxy {
 	//@Override
 	//public void orlinRendererSpawnParticles(World world, StargateAbstractRendererState rendererState) {}
 
-	//@Override
-	//public void playPositionedSoundClientSide(BlockPos pos, SoundPositionedEnum soundEnum, boolean play) {}
+	@Override
+	public void playPositionedSoundClientSide(BlockPos pos, SoundPositionedEnum soundEnum, boolean play) {}
 
 	@Override
 	public void openGui(GuiScreen gui) {}

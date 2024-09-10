@@ -5,6 +5,9 @@ import com.mrjake.aunis.util.minecraft.IBlockState;
 import com.mrjake.aunis.util.minecraft.IProperty;
 import net.minecraft.block.Block;
 
+import java.util.Collection;
+import java.util.List;
+
 public class MetaBlockState implements IBlockState {
 
     protected Block block;
@@ -13,6 +16,11 @@ public class MetaBlockState implements IBlockState {
     public MetaBlockState(Block block, int meta) {
         this.block = block;
         this.meta = meta;
+    }
+
+    @Override
+    public Collection<IProperty<?>> getPropertyKeys() {
+        return List.of();
     }
 
     public <T extends Comparable<T>> T getValue(IProperty<T> property) {
