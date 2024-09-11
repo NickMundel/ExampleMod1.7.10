@@ -9,6 +9,7 @@ import com.mrjake.aunis.util.minecraft.TextFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.resources.I18n;
+import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class TabRedstone extends Tab {
 		mc.renderEngine.bindTexture(bgTexLocation);
 
 		GL11.glEnable(GL11.GL_BLEND);
-		GlStateManager.color(1, 1, 1, 1);
+		GL11.glColor4f(1, 1, 1, 1);
 
 		Gui.func_146110_a(guiLeft+currentOffsetX+21, guiTop+defaultY+80, 149, 207, 107, 49, textureSize, textureSize);
 		RedstoneModeEnum currentMode = modeGetter.get();
@@ -82,8 +83,8 @@ public class TabRedstone extends Tab {
 			for (LabeledTextBox textBox : getTextBoxes(beamerModeGetter.get()))
 				textBox.draw();
 
-			saveButton.x = guiLeft+currentOffsetX+90;
-			saveButton.drawButton(mc, mouseX, mouseY, 0);
+			saveButton.xPosition = guiLeft+currentOffsetX+90;
+			saveButton.drawButton(mc, mouseX, mouseY);
 			int y = guiTop+defaultY+68;
 
 			if (beamerModeGetter.get() == BeamerModeEnum.ITEMS)
@@ -106,12 +107,13 @@ public class TabRedstone extends Tab {
 
 				if (GuiHelper.isPointInRegion(b.x, b.y, 20, 20, mouseX, mouseY)) {
 					RedstoneModeEnum mode = RedstoneModeEnum.valueOf(i);
-					String text = I18n.format(mode.translationKey);
+					List<String> text = new ArrayList<>();
+                    text.add(I18n.format(mode.translationKey));
 
-					if (mode == RedstoneModeEnum.IGNORED && Aunis.ocWrapper.isModLoaded())
-						text += " (OpenComputers)";
+					if (mode == RedstoneModeEnum.IGNORED)
+						text.add(" (OpenComputers)");
 
-					screen.drawHoveringText(text, mouseX-guiLeft, mouseY-guiTop);
+					screen.drawHoveringText(text, mouseX-guiLeft, mouseY-guiTop, fontRenderer);
 				}
 			}
 		}
@@ -160,7 +162,7 @@ public class TabRedstone extends Tab {
 		}
 
 		public void draw() {
-			textField.x = guiLeft+currentOffsetX+31;
+			textField.xPosition = guiLeft+currentOffsetX+31;
 
 			int y = this.y;
 			for (String text: this.text) {

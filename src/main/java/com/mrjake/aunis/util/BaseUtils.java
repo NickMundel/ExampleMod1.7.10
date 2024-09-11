@@ -118,4 +118,8 @@ public class BaseUtils {
         double d2 = (double)te.zCoord + 0.5D - z;
         return d0 * d0 + d1 * d1 + d2 * d2;
     }
+
+    public static net.minecraft.util.AxisAlignedBB newAxisAlignedBB(double x0, double y0, double z0, double x1, double y1, double z1) {
+        return net.minecraft.util.AxisAlignedBB.getBoundingBox(x0, y0, z0, x1, y1, z1);
+    }
 }

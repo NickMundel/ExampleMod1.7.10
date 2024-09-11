@@ -130,10 +130,10 @@ public class StargateContainerGui extends GuiContainer implements TabbedContaine
 		tabs.add(universeAddressTab);
 		tabs.add(overlayTab);
 
-		container.inventorySlots.set(7, milkyWayAddressTab.createSlot((SlotItemHandler) container.getSlot(7)));
-		container.inventorySlots.set(8, pegasusAddressTab.createSlot((SlotItemHandler) container.getSlot(8)));
-		container.inventorySlots.set(9, universeAddressTab.createSlot((SlotItemHandler) container.getSlot(9)));
-		container.inventorySlots.set(10, overlayTab.createAndSaveSlot((SlotItemHandler) container.getSlot(10)));
+		container.inventorySlots.set(7, milkyWayAddressTab.createSlot(container.getSlot(7)));
+		container.inventorySlots.set(8, pegasusAddressTab.createSlot(container.getSlot(8)));
+		container.inventorySlots.set(9, universeAddressTab.createSlot(container.getSlot(9)));
+		container.inventorySlots.set(10, overlayTab.createAndSaveSlot(container.getSlot(10)));
 	}
 
 	@Override

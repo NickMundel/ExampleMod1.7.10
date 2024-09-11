@@ -1,6 +1,7 @@
 package com.mrjake.aunis.util.minecraft;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.mrjake.aunis.util.BaseUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,6 +45,10 @@ public class AxisAlignedBB
     public AxisAlignedBB setMaxY(double y2)
     {
         return new AxisAlignedBB(this.minX, this.minY, this.minZ, this.maxX, y2, this.maxZ);
+    }
+
+    public net.minecraft.util.AxisAlignedBB convertToMC() {
+        return BaseUtils.newAxisAlignedBB(this.minX, this.minY, this.minZ, this.maxX, this.maxY, this.maxZ);
     }
 
     public boolean equals(Object p_equals_1_)

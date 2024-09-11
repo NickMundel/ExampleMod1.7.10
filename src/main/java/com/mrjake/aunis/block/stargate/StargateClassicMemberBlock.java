@@ -7,6 +7,7 @@ import com.mrjake.aunis.stargate.CamoPropertiesHelper;
 import com.mrjake.aunis.stargate.EnumMemberVariant;
 import com.mrjake.aunis.tileentity.stargate.StargateAbstractBaseTile;
 import com.mrjake.aunis.tileentity.stargate.StargateClassicMemberTile;
+import com.mrjake.aunis.util.BaseUtils;
 import com.mrjake.aunis.util.IUnlistedProperty;
 import com.mrjake.aunis.util.minecraft.*;
 import net.minecraft.block.Block;
@@ -19,6 +20,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IRegistry;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -38,7 +40,7 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 	@Override
 	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
 		// Optifine shit
-		if (world.getBlockState(pos).getBlock() != this)
+		if (BaseUtils.getWorldBlockState(world, pos).getBlock() != this)
 			return 0;
 
 		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
@@ -106,7 +108,8 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 	@Override
 	public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 		// Optifine shit
-		if (world.getBlockState(pos).getBlock() != this)
+
+		if (BaseUtils.getWorldBlockState(world, pos).getBlock() != this)
 			return state;
 
 		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos);
@@ -115,7 +118,7 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 			IBlockState camoBlockState = memberTile.getCamoState();
 
 			if (camoBlockState != null) {
-				return ((IExtendedBlockState) state).withProperty(AunisProps.CAMO_BLOCKSTATE, camoBlockState);
+				return state.withProperty(AunisProps.CAMO_BLOCKSTATE, camoBlockState);
 			}
 		}
 
@@ -124,27 +127,22 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void registerCustomModel(IRegistry<ModelResourceLocation, IBakedModel> registry) {
+    public void registerCustomModel(IRegistry<String, Object> registry) {
+        for (IBlockState state : getActualState().getValidStates()) {
+            String variant = "";
 
-		for (IBlockState state : getBlockState().getValidStates()) {
-			String variant = "";
+            for (IProperty prop : state.getPropertyKeys()) {
+                Object value = state.getValue(prop);
+                variant += prop.getName() + "=" + value.toString() + ",";
+            }
 
-			for (IProperty prop : state.getPropertyKeys()) {
-				Object value = state.getValue(prop);
+            variant = variant.substring(0, variant.length() - 1);
 
-				variant += prop.getName() + "=" + value.toString() + ",";
-			}
+            String modelKey = getUnlocalizedName() + "_" + variant;
 
-			variant = variant.substring(0, variant.length()-1);
-
-			ModelResourceLocation modelResourceLocation = new ModelResourceLocation(getRegistryName(), variant);
-
-			IBakedModel defaultModel = registry.getObject(modelResourceLocation);
-			StargateClassicMemberBlockBakedModel memberBlockBakedModel = new StargateClassicMemberBlockBakedModel(this, defaultModel);
-
-			registry.putObject(modelResourceLocation, memberBlockBakedModel);
-		}
-	}
+            registry.putObject(modelKey, new StargateClassicMemberBlockRenderer(this, getRenderId()));
+        }
+    }
 
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
@@ -243,7 +241,7 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 				}
 
 				SoundType soundtype = camoBlock.getSoundType(camoBlock.getDefaultState(), world, pos, player);
-				world.playSound(null, pos, soundtype.getBreakSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
+				world.playSound(pos.getX(), pos.getY(), pos.getZ(), soundtype.getBreakSound(), (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F, true);
 
 				memberTile.setCamoState(null);
 				camoBlockState = null;

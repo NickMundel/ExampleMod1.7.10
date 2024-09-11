@@ -646,7 +646,7 @@ public abstract class StargateAbstractBaseTile extends BaseTileEntity implements
 	private boolean addedToNetwork;
 
 	@Override
-	public void update() {
+	public void tick() {
 		// Scheduled tasks
 		ScheduledTask.iterate(scheduledTasks, worldObj.getTotalWorldTime());
 
@@ -715,7 +715,7 @@ public abstract class StargateAbstractBaseTile extends BaseTileEntity implements
 				// Kill them
 				for (EntityLivingBase entity : entities) {
 					entity.attackEntityFrom(AunisDamageSources.DAMAGE_EVENT_HORIZON, 20);
-					AunisPacketHandler.INSTANCE.sendToAllAround(new StateUpdatePacketToClient(pos, StateTypeEnum.STARGATE_VAPORIZE_BLOCK_PARTICLES, new StargateVaporizeBlockParticlesRequest(entity.getPosition())), targetPoint);
+					AunisPacketHandler.INSTANCE.sendToAllAround(new StateUpdatePacketToClient(pos, StateTypeEnum.STARGATE_VAPORIZE_BLOCK_PARTICLES, new StargateVaporizeBlockParticlesRequest(new BlockPos(entity.posX, entity.posY + 0.5, entity.posZ))), targetPoint);
 				}
 
 				// Vaporize them
@@ -892,7 +892,7 @@ public abstract class StargateAbstractBaseTile extends BaseTileEntity implements
 	// ------------------------------------------------------------------------
 	// Rendering
 
-	private AxisAlignedBB renderBoundingBox = TileEntity.INFINITE_EXTENT_AABB;
+	private AxisAlignedBB renderBoundingBox = new AxisAlignedBB(TileEntity.INFINITE_EXTENT_AABB.minX, TileEntity.INFINITE_EXTENT_AABB.minY, TileEntity.INFINITE_EXTENT_AABB.minZ, TileEntity.INFINITE_EXTENT_AABB.maxX, TileEntity.INFINITE_EXTENT_AABB.maxY, TileEntity.INFINITE_EXTENT_AABB.maxZ);
 
 	public AunisAxisAlignedBB getRenderBoundingBoxForDisplay() {
 		return getRenderBoundingBoxRaw().rotate((int) facing.getHorizontalAngle()).offset(0.5, 0, 0.5);

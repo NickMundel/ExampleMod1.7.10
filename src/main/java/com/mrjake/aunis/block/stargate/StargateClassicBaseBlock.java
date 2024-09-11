@@ -3,6 +3,7 @@ package com.mrjake.aunis.block.stargate;
 
 import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.AunisProps;
+import com.mrjake.aunis.gui.GuiIdEnum;
 import com.mrjake.aunis.stargate.CamoPropertiesHelper;
 import com.mrjake.aunis.stargate.EnumMemberVariant;
 import com.mrjake.aunis.tileentity.stargate.StargateClassicBaseTile;

@@ -297,8 +297,8 @@ public class StargateMilkyWayBaseTile extends StargateClassicBaseTile implements
 	private boolean firstTick = true;
 
 	@Override
-	public void update() {
-		super.update();
+	public void tick() {
+		super.tick();
 
 		if (!worldObj.isRemote) {
 			if (firstTick) {

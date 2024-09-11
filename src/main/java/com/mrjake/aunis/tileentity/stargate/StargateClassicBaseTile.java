@@ -58,7 +58,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		super.engageGate();
 
 		for (BlockPos beamerPos : linkedBeamers) {
-			((BeamerTile) worldObj.getTileEntity(beamerPos)).gateEngaged(targetGatePos);
+			//((BeamerTile) worldObj.getTileEntity(beamerPos)).gateEngaged(targetGatePos);
 		}
 	}
 
@@ -67,7 +67,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		super.closeGate(reason);
 
 		for (BlockPos beamerPos : linkedBeamers) {
-			((BeamerTile) worldObj.getTileEntity(beamerPos)).gateClosed();
+			//((BeamerTile) worldObj.getTileEntity(beamerPos)).gateClosed();
 		}
 	}
 
@@ -151,8 +151,8 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 	}
 
 	@Override
-	public void update() {
-		super.update();
+	public void tick() {
+		super.tick();
 
 		if (!worldObj.isRemote) {
 			if (givePageTask != null) {

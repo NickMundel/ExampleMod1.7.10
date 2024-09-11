@@ -2,6 +2,7 @@ package com.mrjake.aunis.block;
 
 import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.AunisProps;
+import com.mrjake.aunis.gui.GuiIdEnum;
 import com.mrjake.aunis.tileentity.DHDTile;
 import com.mrjake.aunis.tileentity.stargate.StargateAbstractBaseTile;
 import com.mrjake.aunis.tileentity.stargate.StargateMilkyWayBaseTile;
@@ -74,7 +75,8 @@ public class DHDBlock extends BaseBlock {
 		// Check if 4 adjacent blocks are snow layers
 		for (EnumFacing facing : HORIZONTALS) {
 			BlockPos pos = inPos.offset(facing);
-			if (!SNOW_MATCHER.apply(world.getBlockState(pos))) {
+
+			if (!SNOW_MATCHER.apply(BaseUtils.getWorldBlockState(world, pos))) {
 				return false;
 			}
 		}
@@ -115,7 +117,7 @@ public class DHDBlock extends BaseBlock {
 				// Try: fluid interaction, upgrade insertion, gui opening
 
 				if (!FluidUtil.interactWithFluidHandler(player, world, pos, null)) {
-					DHDTile tile = (DHDTile) world.getTileEntity(pos);
+					DHDTile tile = (DHDTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 					if(!tile.tryInsertUpgrade(player)) {
 						player.openGui(Aunis.instance, GuiIdEnum.GUI_DHD.id, world, pos.getX(), pos.getY(), pos.getZ());
 					}
@@ -158,58 +160,47 @@ public class DHDBlock extends BaseBlock {
 		return gateTile.getDialedAddress().size() > 0 ? 15 : 0;
 	}
 
-	@Override
 	public boolean canProvidePower(IBlockState state) {
 		return true;
 	}
 
-	@Override
 	public boolean canConnectRedstone(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
 
-	@Override
 	public int getWeakPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return getPower(world, pos);
 	}
 
-	@Override
 	public int getStrongPower(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return getPower(world, pos);
 	}
 
 	// ------------------------------------------------------------------------
-	@Override
 	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 
-	@Override
 	public TileEntity createTileEntity(World world, IBlockState state) {
 		return new DHDTile();
 	}
 
-	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.ENTITYBLOCK_ANIMATED;
     }
 
-	@Override
 	public boolean isOpaqueCube(IBlockState state) {
 		return false;
 	}
 
-	@Override
 	public boolean isFullCube(IBlockState state) {
 		return false;
 	}
 
-	@Override
 	public boolean isFullBlock(IBlockState state) {
 		return false;
 	}
 
-	@Override
 	public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
 		return BlockFaceShape.UNDEFINED;
 	}

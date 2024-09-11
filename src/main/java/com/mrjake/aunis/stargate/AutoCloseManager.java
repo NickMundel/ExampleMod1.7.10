@@ -7,9 +7,13 @@ import com.mrjake.aunis.util.INBTSerializable;
 import com.mrjake.aunis.util.minecraft.AxisAlignedBB;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import com.mrjake.aunis.util.minecraft.Vec3i;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class AutoCloseManager implements INBTSerializable<NBTTagCompound> {
 
@@ -47,9 +51,16 @@ public class AutoCloseManager implements INBTSerializable<NBTTagCompound> {
 
 			if (playersPassed > 0) {
 				if (sourceLoaded) {
-
+                    int playerCount = 0;
 					AxisAlignedBB scanBox = new AxisAlignedBB(sourcePos.add(new Vec3i(-10, -5, -10)), sourcePos.add(new Vec3i(10, 5, 10)));
-					int playerCount = sourceWorld.getEntitiesWithinAABB(EntityPlayerMP.class, scanBox, player -> !player.isDead).size();
+                    List<Entity> players = sourceWorld.getEntitiesWithinAABB(Entity.class, scanBox.convertToMC());
+
+                    for (Entity entity : players) {
+                        if (entity instanceof EntityFishHook) continue;
+                        if (!entity.isDead && entity.ridingEntity == null) {
+                           playerCount++;
+                        }
+                    }
 
 					if (playerCount == 0)
 						secondsPassed++;

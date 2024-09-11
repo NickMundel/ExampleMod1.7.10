@@ -20,10 +20,7 @@ import com.mrjake.aunis.state.*;
 import com.mrjake.aunis.tileentity.stargate.StargateAbstractBaseTile;
 import com.mrjake.aunis.tileentity.util.IUpgradable;
 import com.mrjake.aunis.tileentity.util.ReactorStateEnum;
-import com.mrjake.aunis.util.BaseTileEntity;
-import com.mrjake.aunis.util.EnumKeyInterface;
-import com.mrjake.aunis.util.ILinkable;
-import com.mrjake.aunis.util.ItemMetaPair;
+import com.mrjake.aunis.util.*;
 import com.mrjake.aunis.util.minecraft.AxisAlignedBB;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import com.mrjake.aunis.util.minecraft.IBlockState;
@@ -52,11 +49,11 @@ public class DHDTile extends BaseTileEntity implements ILinkable, IUpgradable, S
 	private BlockPos linkedGate = null;
 
 	public void rotate(Rotation rotation) {
-		IBlockState state = worldObj.getBlockState(pos);
+		IBlockState state = BaseUtils.getWorldBlockState(worldObj, pos);
 
 		int rotationOrig = state.getValue(AunisProps.ROTATION_HORIZONTAL);
-		worldObj.setBlockState(pos, state.withProperty(AunisProps.ROTATION_HORIZONTAL, rotation.rotate(rotationOrig, 16)));
-	}
+	    BaseUtils.setWorldBlockState(worldObj, pos, state.withProperty(AunisProps.ROTATION_HORIZONTAL, rotation.rotate(rotationOrig, 16)));
+    }
 
 	public void setLinkedGate(BlockPos gate) {
 		this.linkedGate = gate;
@@ -112,7 +109,7 @@ public class DHDTile extends BaseTileEntity implements ILinkable, IUpgradable, S
 	}
 
 	@Override
-	public void update() {
+	public void tick() {
 		if (!worldObj.isRemote) {
 
 			// Has crystal
@@ -335,7 +332,7 @@ public class DHDTile extends BaseTileEntity implements ILinkable, IUpgradable, S
 	public void setState(StateTypeEnum stateType, State state) {
 		switch (stateType) {
 			case RENDERER_STATE:
-				float horizontalRotation = worldObj.getBlockState(pos).getValue(AunisProps.ROTATION_HORIZONTAL) * -22.5f;
+				float horizontalRotation = BaseUtils.getWorldBlockState(worldObj, pos).getValue(AunisProps.ROTATION_HORIZONTAL) * -22.5f;
 				rendererStateClient = ((DHDRendererState) state).initClient(pos, horizontalRotation, BiomeOverlayEnum.updateBiomeOverlay(worldObj, pos, SUPPORTED_OVERLAYS));
 
 				break;

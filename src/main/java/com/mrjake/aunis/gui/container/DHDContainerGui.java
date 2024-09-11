@@ -46,21 +46,21 @@ public class DHDContainerGui extends GuiContainer implements TabbedContainerInte
 		container.tankNaquadah.setFluid(new FluidStack(AunisFluids.moltenNaquadahRefined, 0));
 		this.tank = new FluidTankElement(this, 151, 18, 16, 54, container.tankNaquadah);
 
-		diodes.add(new Diode(this, 8, 55, I18n.format("gui.dhd.crystalStatus")).setDiodeStatus(DiodeStatus.OFF)
+		diodes.add(new Diode(this.fontRendererObj, this.mc.currentScreen, 8, 55, I18n.format("gui.dhd.crystalStatus")).setDiodeStatus(DiodeStatus.OFF)
 				.putStatus(DiodeStatus.OFF, I18n.format("gui.dhd.no_crystal"))
 				.putStatus(DiodeStatus.ON, I18n.format("gui.dhd.crystal_ok"))
 				.setStatusMapper(() -> {
 					return container.slotCrystal.getHasStack() ? DiodeStatus.ON : DiodeStatus.OFF;
 				}));
 
-		diodes.add(new Diode(this, 17, 55, I18n.format("gui.dhd.linkStatus")).setDiodeStatus(DiodeStatus.OFF)
+		diodes.add(new Diode(this.fontRendererObj, this.mc.currentScreen,17, 55, I18n.format("gui.dhd.linkStatus")).setDiodeStatus(DiodeStatus.OFF)
 				.putStatus(DiodeStatus.OFF, I18n.format("gui.dhd.not_linked"))
 				.putStatus(DiodeStatus.ON, I18n.format("gui.dhd.linked"))
 				.setStatusMapper(() -> {
 					return container.dhdTile.isLinkedClient ? DiodeStatus.ON : DiodeStatus.OFF;
 				}));
 
-		diodes.add(new Diode(this, 26, 55, I18n.format("gui.dhd.reactorStatus"))
+		diodes.add(new Diode(this.fontRendererObj, this.mc.currentScreen,26, 55, I18n.format("gui.dhd.reactorStatus"))
 				.putStatus(DiodeStatus.OFF, I18n.format("gui.dhd.no_fuel"))
 				.putStatus(DiodeStatus.WARN, I18n.format("gui.dhd.standby"))
 				.putStatus(DiodeStatus.ON, I18n.format("gui.dhd.running"))

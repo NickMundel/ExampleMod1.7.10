@@ -40,7 +40,7 @@ public class DHDContainer extends Container implements OpenTabHolderInterface {
 
 	public DHDContainer(IInventory playerInventory, World world, int x, int y, int z) {
 		pos = new BlockPos(x, y, z);
-		dhdTile = (DHDTile) world.getTileEntity(pos);
+		dhdTile = (DHDTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 		IItemHandler itemHandler = dhdTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
 		// Crystal slot (index 0)
