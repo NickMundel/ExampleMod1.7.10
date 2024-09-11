@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 import static com.mrjake.aunis.util.BaseUtils.getBlockStateFromMeta;
 
-public class BaseBlock<TE extends TileEntity> extends BlockContainer implements IBlock {
+public class BaseBlock extends BlockContainer implements IBlock {
 
     protected final BlockState blockState;
     protected IBlockState defaultBlockState;
@@ -32,26 +32,12 @@ public class BaseBlock<TE extends TileEntity> extends BlockContainer implements 
     protected int numProperties; // Do not explicitly initialise
     protected int renderID;
 
-    protected Class<? extends TileEntity> tileEntityClass = null;
     public BaseBlock(Material material) {
-        this(material, null, null);
+        this(material, null);
     }
 
-    public BaseBlock(Material material, Class<TE> teClass) {
-        this(material, teClass, null);
-    }
-
-    public BaseBlock(Material material, Class<TE> teClass, String teID) {
+    public BaseBlock(Material material, String teID) {
         super(material);
-        tileEntityClass = teClass;
-        if (teClass != null) {
-            if (teID == null) teID = teClass.getName();
-            try {
-                GameRegistry.registerTileEntity(teClass, teID);
-            } catch (IllegalArgumentException e) {
-                // Ignore redundant registration
-            }
-        }
         blockState = createBlockState();
         defaultBlockState = blockState.getBaseState();
         opaque = true;
@@ -234,11 +220,12 @@ public class BaseBlock<TE extends TileEntity> extends BlockContainer implements 
     }
 
     public boolean hasTileEntity(IBlockState state) {
-        return tileEntityClass != null;
+        return false;
     }
 
     public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing facing)
     {
         return BlockFaceShape.SOLID;
     }
+
 }

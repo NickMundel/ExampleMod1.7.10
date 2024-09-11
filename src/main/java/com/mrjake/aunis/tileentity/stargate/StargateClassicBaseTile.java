@@ -2,6 +2,8 @@ package com.mrjake.aunis.tileentity.stargate;
 
 import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.config.AunisConfig;
+import com.mrjake.aunis.gui.container.StargateContainerGuiState;
+import com.mrjake.aunis.gui.container.StargateContainerGuiUpdate;
 import com.mrjake.aunis.item.AunisItems;
 import com.mrjake.aunis.packet.AunisPacketHandler;
 import com.mrjake.aunis.packet.StateUpdatePacketToClient;
@@ -739,7 +741,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 
 	public void addLinkedBeamer(BlockPos pos) {
 		if (stargateState.engaged()) {
-			((BeamerTile) worldObj.getTileEntity(pos)).gateEngaged(targetGatePos);
+			//((BeamerTile) worldObj.getTileEntity(pos)).gateEngaged(targetGatePos);
 		}
 
 		linkedBeamers.add(pos.toImmutable());
@@ -754,7 +756,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 	private void updateBeamers() {
 		if (stargateState.engaged()) {
 			for (BlockPos beamerPos : linkedBeamers) {
-				((BeamerTile) worldObj.getTileEntity(beamerPos)).gateEngaged(targetGatePos);
+				//((BeamerTile) worldObj.getTileEntity(beamerPos)).gateEngaged(targetGatePos);
 			}
 		}
 	}

@@ -7,9 +7,13 @@ import com.mrjake.aunis.util.minecraft.EnumFacing;
 import com.mrjake.aunis.util.minecraft.MathHelper;
 import com.mrjake.aunis.util.minecraft.Vec3d;
 import com.mrjake.vector.Matrix2f;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeHooks;
@@ -80,19 +84,18 @@ public class TeleportHelper {
 		if (entity.isRiding())
 			return;
 
-		if (entity.isBeingRidden()) {
-			passengers = entity.getPassengers();
-			entity.removePassengers();
+        if (entity.riddenByEntity != null) {
+            Entity passenger = entity.riddenByEntity;
+            entity.riddenByEntity = null;
+            passenger.mountEntity(null);
 
-			for (Entity passenger : passengers) {
-				teleportEntity(passenger, sourceGatePos, targetGatePos, rotation, motionVector);
-			}
-		}
+            teleportEntity(passenger, sourceGatePos, targetGatePos, rotation, motionVector);
+        }
 
-		World world = entity.getEntityWorld();
+        World world = entity.worldObj;
 		int sourceDim = world.provider.dimensionId;
 
-		StargateAbstractBaseTile sourceTile = (StargateAbstractBaseTile) world.getTileEntity(sourceGatePos);
+		StargateAbstractBaseTile sourceTile = (StargateAbstractBaseTile) world.getTileEntity(sourceGatePos.getX(), sourceGatePos.getY(), sourceGatePos.getZ());
 		StargateAbstractBaseTile targetTile = targetGatePos.getTileEntity();
 
 		int flipAxis = 0;
@@ -102,17 +105,22 @@ public class TeleportHelper {
 		else
 			flipAxis |= EnumFlipAxis.Z.mask;
 
-		Vec3d pos = null;
+        BlockPos pos = null;
 		BlockPos tPos = targetGatePos.gatePos;
 
 		//if (sourceTile instanceof StargateOrlinBaseTile)
-			pos = new Vec3d(tPos.getX() + 0.5, tPos.getY() + 2.0, tPos.getZ() + 0.5);
+		//	pos = new Vec3d(tPos.getX() + 0.5, tPos.getY() + 2.0, tPos.getZ() + 0.5);
 		//else if (targetTile instanceof StargateOrlinBaseTile)
-			pos = new Vec3d(tPos.getX() + 0.5, tPos.getY() + 0.5, tPos.getZ() + 0.5);
+		//	pos = new Vec3d(tPos.getX() + 0.5, tPos.getY() + 0.5, tPos.getZ() + 0.5);
         //else
 			pos = getPosition(entity, sourceTile.getGateCenterPos(), targetTile.getGateCenterPos(), rotation, targetTile.getFacing().getAxis()== EnumFacing.Axis.Z ? ~flipAxis : flipAxis);
 
-		final float yawRotated = getRotation(entity.isBeingRidden() ? entity.getControllingPassenger() : entity, rotation, flipAxis);
+        final float yawRotated;
+        if (entity.riddenByEntity != null && entity.riddenByEntity instanceof EntityLivingBase) {
+            yawRotated = getRotation((EntityLivingBase) entity.riddenByEntity, rotation, flipAxis);
+        } else {
+            yawRotated = getRotation(entity, rotation, flipAxis);
+        }
 		boolean isPlayer = entity instanceof EntityPlayerMP;
 
 		if (sourceDim == targetGatePos.dimensionID) {
@@ -120,26 +128,22 @@ public class TeleportHelper {
 		}
 
 		else {
-	        if (!ForgeHooks.onTravelToDimension(entity, targetGatePos.dimensionID)) return;
+			final BlockPos posFinal = pos;
 
-			final Vec3d posFinal = pos;
+            if (isPlayer) {
+                EntityPlayerMP player = (EntityPlayerMP) entity;
+                player.mcServer.getConfigurationManager().transferPlayerToDimension(player, targetGatePos.dimensionID, new Teleporter(player.mcServer.worldServerForDimension(targetGatePos.dimensionID)) {
+                    @Override
+                    public void placeInPortal(Entity entity, double x, double y, double z, float yaw) {
+                        setRotationAndPosition(entity, yawRotated, posFinal);
+                    }
+                });
+            }
 
-			ITeleporter teleporter = new ITeleporter() {
-
-				@Override
-				public void placeEntity(World world, Entity entity, float yaw) {
-					setRotationAndPosition(entity, yawRotated, posFinal);
-				}
-			};
-
-			if (isPlayer) {
-				EntityPlayerMP player = (EntityPlayerMP) entity;
-				player.getServer().getPlayerList().transferPlayerToDimension(player, targetGatePos.dimensionID, teleporter);
-			}
-
-			else {
-				entity = entity.changeDimension(targetGatePos.dimensionID, teleporter);
-			}
+            else {
+                entity.travelToDimension(targetGatePos.dimensionID);
+                setRotationAndPosition(entity, yawRotated, posFinal);
+            }
 		}
 
 		setMotion(entity, rotation, motionVector);
@@ -147,28 +151,26 @@ public class TeleportHelper {
 		sourceTile.entityPassing(entity, false);
 		targetTile.entityPassing(entity, true);
 
-		if (passengers != null) {
-			for (Entity passenger : passengers) {
-				passenger.startRiding(entity);
-			}
-		}
+        if (entity.riddenByEntity != null) {
+            Entity passenger = entity.riddenByEntity;
+            passenger.mountEntity(entity);
+        }
 	}
 
-	public static void teleportWithRiders(Entity entity, float yawRotated, Vec3d pos) {
-		if (entity.isBeingRidden()) {
-			for (Entity entity2 : entity.getPassengers()) {
-				setRotationAndPosition(entity2, yawRotated, pos);
-			}
-		}
+    public static void teleportWithRiders(Entity entity, float yawRotated, BlockPos pos) {
+        if (entity.riddenByEntity != null) {
+            Entity entity2 = entity.riddenByEntity;
+            setRotationAndPosition(entity2, yawRotated, pos);
+        }
 
-		setRotationAndPosition(entity, yawRotated, pos);
-	}
+        setRotationAndPosition(entity, yawRotated, pos);
+    }
 
-	public static void setRotationAndPosition(Entity entity, float yawRotated, Vec3d pos) {
-		entity.rotationYaw = yawRotated;
-		entity.setPositionAndUpdate(pos.x, pos.y, pos.z);
-		entity.getEntityWorld().updateEntityWithOptionalForce(entity, true);
-	}
+    public static void setRotationAndPosition(Entity entity, float yawRotated, BlockPos pos) {
+        entity.rotationYaw = yawRotated;
+        entity.setPosition(pos.getX(), pos.getY(), pos.getZ());
+        entity.worldObj.updateEntityWithOptionalForce(entity, true);
+    }
 
 	public static float getRotation(Entity player, float rotation, int flipAxis) {
 		Vec3 lookVec = player.getLookVec();
@@ -189,7 +191,7 @@ public class TeleportHelper {
 		}
 	}
 
-	public static Vec3d getPosition(Entity player, BlockPos sourceGatePos, BlockPos targetGatePos, float rotation, int flipAxis) {
+	public static BlockPos getPosition(Entity player, BlockPos sourceGatePos, BlockPos targetGatePos, float rotation, int flipAxis) {
 		Vector2f sourceCenter = new Vector2f( sourceGatePos.getX()+0.5f, sourceGatePos.getZ()+0.5f );
 		Vector2f destCenter = new Vector2f( targetGatePos.getX()+0.5f, targetGatePos.getZ()+0.5f );
 		Vector2f playerPosition = new Vector2f( (float)(player.posX), (float)(player.posZ) );
@@ -199,17 +201,17 @@ public class TeleportHelper {
 		translateToDest(playerPosition, destCenter);
 
 		float y = (float) (targetGatePos.getY() + ( player.posY - sourceGatePos.getY() ));
-		return new Vec3d(playerPosition.x, y, playerPosition.y);
+		return new BlockPos(playerPosition.x, y, playerPosition.y);
 	}
 
-	public static World getWorldObj(int dimension) {
-		World world = DimensionManager.getWorldObj(0);
+    public static World getWorldObj(int dimension) {
+        World world = DimensionManager.getWorldObj(0);
 
-		if (dimension == 0)
-			return world;
+        if (dimension == 0)
+            return world;
 
-		return world.getMinecraftServer().getWorldObj(dimension);
-	}
+        return MinecraftServer.getServer().worldServerForDimension(dimension);
+    }
 
 	public static boolean frontSide(EnumFacing sourceFacing, Vector2f motionVec) {
 		EnumFacing.Axis axis = sourceFacing.getAxis();
