@@ -12,6 +12,7 @@ import com.mrjake.aunis.stargate.network.SymbolTypeEnum;
 import com.mrjake.aunis.stargate.network.SymbolUniverseEnum;
 import com.mrjake.aunis.stargate.power.StargateClassicEnergyStorage;
 import com.mrjake.aunis.tileentity.stargate.StargateClassicBaseTile;
+import com.mrjake.aunis.util.BaseUtils;
 import com.mrjake.aunis.util.minecraft.TextFormatting;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -148,7 +149,7 @@ public class StargateContainerGui extends GuiContainer implements TabbedContaine
 		for (int i=0; i<4; i++) {
 			ItemStack itemStack = container.getSlot(i).getStack();
 
-			if (!itemStack.isEmpty()) {
+			if (!BaseUtils.isEmpty(itemStack)) {
 				switch (StargateClassicBaseTile.StargateUpgradeEnum.valueOf(itemStack.getItem())) {
 					case CHEVRON_UPGRADE:
 						hasAddressUpgrade = true;

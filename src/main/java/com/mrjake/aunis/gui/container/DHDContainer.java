@@ -6,6 +6,7 @@ import com.mrjake.aunis.packet.StateUpdatePacketToClient;
 import com.mrjake.aunis.state.StateTypeEnum;
 import com.mrjake.aunis.tileentity.DHDTile;
 import com.mrjake.aunis.tileentity.util.ReactorStateEnum;
+import com.mrjake.aunis.util.BaseUtils;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -86,10 +87,10 @@ public class DHDContainer extends Container implements OpenTabHolderInterface {
         	if (stack.getItem() == AunisItems.CRYSTAL_CONTROL_DHD) {
         		if (!slotCrystal.getHasStack()) {
         			ItemStack stack1 = stack.copy();
-    				stack1.setCount(1);
+    				BaseUtils.setCount(stack1, 1);
         			slotCrystal.putStack(stack1);
 
-    				stack.shrink(1);
+    				BaseUtils.shrink(stack, 1);
 
                 	return null;
         		}
@@ -99,10 +100,10 @@ public class DHDContainer extends Container implements OpenTabHolderInterface {
         		for (int i=1; i<5; i++) {
         			if (!getSlot(i).getHasStack()) {
         				ItemStack stack1 = stack.copy();
-        				stack1.setCount(1);
+        				BaseUtils.setCount(stack1, 1);
 
         				putStackInSlot(i, stack1);
-        				stack.shrink(1);
+        				BaseUtils.shrink(stack, 1);
 
         				return stack;
         			}
@@ -113,10 +114,10 @@ public class DHDContainer extends Container implements OpenTabHolderInterface {
         	else if (openTabId == 0 && getSlot(5).isItemValid(stack)) {
         		if (!getSlot(5).getHasStack()) {
         			ItemStack stack1 = stack.copy();
-    				stack1.setCount(1);
+    				BaseUtils.setCount(stack1, 1);
 
     				putStackInSlot(5, stack1);
-    				stack.shrink(1);
+    				BaseUtils.shrink(stack, 1);
 
     				return null;
         		}

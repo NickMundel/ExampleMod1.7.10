@@ -5,6 +5,7 @@ import com.mrjake.aunis.packet.StateUpdatePacketToClient;
 import com.mrjake.aunis.stargate.power.StargateClassicEnergyStorage;
 import com.mrjake.aunis.state.StateTypeEnum;
 import com.mrjake.aunis.tileentity.stargate.StargateClassicBaseTile;
+import com.mrjake.aunis.util.BaseUtils;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -38,7 +39,7 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
 
 	public StargateContainer(IInventory playerInventory, World world, int x, int y, int z) {
 		pos = new BlockPos(x, y, z);
-		gateTile = (StargateClassicBaseTile) world.getTileEntity(pos);
+		gateTile = (StargateClassicBaseTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 		IItemHandler itemHandler = gateTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
 
 		// Upgrades 2x2 (index 0-3)
@@ -102,10 +103,10 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
         		for (int i=4; i<7; i++) {
         			if (!getSlot(i).getHasStack() && getSlot(i).isItemValid(stack)) {
         				ItemStack stack1 = stack.copy();
-        				stack1.setCount(1);
+                        BaseUtils.setCount(stack1, 1);
 
 	        			putStackInSlot(i, stack1);
-	        			stack.shrink(1);
+                        BaseUtils.shrink(stack, 1);
 
 	        			return stack;
 	        		}
@@ -116,10 +117,10 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
         		for (int i=0; i<4; i++) {
         			if (!getSlot(i).getHasStack()) {
         				ItemStack stack1 = stack.copy();
-        				stack1.setCount(1);
+                        BaseUtils.setCount(stack1, 1);
 
         				putStackInSlot(i, stack1);
-        				stack.shrink(1);
+                        BaseUtils.shrink(stack, 1);
 
         				return null;
         			}
@@ -129,10 +130,10 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
         	else if (openTabId >= 0 && openTabId <= 2 && getSlot(7+openTabId).isItemValid(stack)) {
     			if (!getSlot(7+openTabId).getHasStack()) {
     				ItemStack stack1 = stack.copy();
-    				stack1.setCount(1);
+    				BaseUtils.setCount(stack1, 1);
 
     				putStackInSlot(7+openTabId, stack1);
-    				stack.shrink(1);
+    				BaseUtils.shrink(stack, 1);
 
     				return null;
     			}
@@ -142,10 +143,10 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
         	else if (openTabId == 3 && getSlot(10).isItemValid(stack)) {
         		if (!getSlot(10).getHasStack()) {
         			ItemStack stack1 = stack.copy();
-    				stack1.setCount(1);
+    				BaseUtils.setCount(stack1, 1);
 
     				putStackInSlot(10, stack1);
-    				stack.shrink(1);
+    				BaseUtils.shrink(stack, 1);
 
     				return null;
         		}

@@ -3,6 +3,7 @@ package com.mrjake.aunis.block.stargate;
 import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.AunisProps;
 import com.mrjake.aunis.util.BaseUtils;
+import com.mrjake.aunis.util.IExtendedBlockState;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import com.mrjake.aunis.util.minecraft.EnumFacing;
 import com.mrjake.aunis.util.minecraft.IBlockState;
@@ -34,7 +35,7 @@ public class StargateClassicMemberBlockRenderer implements ISimpleBlockRendering
     public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
         IBlockState state =BaseUtils.getWorldBlockState(world, new BlockPos(x, y, z));
 
-        IBlockState camoBlockState = state.getValue(AunisProps.CAMO_BLOCKSTATE);
+        IBlockState camoBlockState = ((IExtendedBlockState) state).getValue(AunisProps.CAMO_BLOCKSTATE);
 
         if (camoBlockState != null && camoBlockState.getBlock() != Blocks.air && camoBlockState.getBlock() != defaultBlock) {
             try {

@@ -5,6 +5,7 @@ import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.AunisProps;
 import com.mrjake.aunis.block.AunisBlocks;
 import com.mrjake.aunis.config.AunisConfig;
+import com.mrjake.aunis.fluid.AunisFluids;
 import com.mrjake.aunis.item.AunisItems;
 import com.mrjake.aunis.packet.AunisPacketHandler;
 import com.mrjake.aunis.packet.StateUpdatePacketToClient;
@@ -470,20 +471,20 @@ public class DHDTile extends BaseTileEntity implements ILinkable, IUpgradable, S
 	// -----------------------------------------------------------------------------
 	// Fluid handler
 
-//	private final FluidTank fluidHandler = new FluidTank(new FluidStack(AunisFluids.moltenNaquadahRefined, 0), AunisConfig.dhdConfig.fluidCapacity) {
-//
-//		@Override
-//		public boolean canFillFluidType(FluidStack fluid) {
-//			if (fluid == null)
-//				return false;
-//
-//			return fluid.getFluid() == AunisFluids.moltenNaquadahRefined;
-//		}
-//
-//		protected void onContentsChanged() {
-//			markDirty();
-//		}
-//	};
+	private final FluidTank fluidHandler = new FluidTank(new FluidStack(AunisFluids.moltenNaquadahRefined, 0), AunisConfig.dhdConfig.fluidCapacity) {
+
+		@Override
+		public boolean canFillFluidType(FluidStack fluid) {
+			if (fluid == null)
+				return false;
+
+			return fluid.getFluid() == AunisFluids.moltenNaquadahRefined;
+		}
+
+		protected void onContentsChanged() {
+			markDirty();
+		}
+	};
 
 
 

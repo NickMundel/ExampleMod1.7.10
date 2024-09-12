@@ -205,7 +205,7 @@ public class TeleportHelper {
 	}
 
     public static World getWorldObj(int dimension) {
-        World world = DimensionManager.getWorldObj(0);
+        World world = DimensionManager.getWorld(0);
 
         if (dimension == 0)
             return world;

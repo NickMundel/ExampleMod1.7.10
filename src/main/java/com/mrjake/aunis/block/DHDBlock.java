@@ -46,10 +46,6 @@ public class DHDBlock extends BaseBlock {
 	}
 
 	// ------------------------------------------------------------------------
-	@Override
-	protected BlockStateContainer createBlockState() {
-		return new BlockStateContainer(this, AunisProps.ROTATION_HORIZONTAL, AunisProps.SNOWY);
-	}
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
@@ -63,7 +59,7 @@ public class DHDBlock extends BaseBlock {
 				.withProperty(AunisProps.ROTATION_HORIZONTAL, meta);
 	}
 
-	public final static BlockMatcher SNOW_MATCHER = BlockMatcher.forBlock(Blocks.SNOW_LAYER);
+	public final static BlockMatcher SNOW_MATCHER = BlockMatcher.forBlock(Blocks.snow_layer);
 
 	@Override
 	public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
@@ -131,7 +127,7 @@ public class DHDBlock extends BaseBlock {
 
 	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		DHDTile dhdTile = (DHDTile) world.getTileEntity(pos);
+		DHDTile dhdTile = (DHDTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 
 		if (!world.isRemote) {
 			StargateMilkyWayBaseTile gateTile = (StargateMilkyWayBaseTile) dhdTile.getLinkedGate(world);
@@ -146,7 +142,7 @@ public class DHDBlock extends BaseBlock {
 	}
 
 	private int getPower(IBlockAccess world, BlockPos pos) {
-		DHDTile dhdTile = (DHDTile) world.getTileEntity(pos);
+		DHDTile dhdTile = (DHDTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 		if (!dhdTile.isLinked())
 			return 0;
 

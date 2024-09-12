@@ -3,6 +3,7 @@ package com.mrjake.aunis.stargate;
 import com.mrjake.aunis.AunisProps;
 import com.mrjake.aunis.block.AunisBlocks;
 import com.mrjake.aunis.util.BaseUtils;
+import com.mrjake.aunis.util.IExtendedBlockState;
 import com.mrjake.aunis.util.minecraft.AxisAlignedBB;
 import com.mrjake.aunis.util.minecraft.BlockPos;
 import com.mrjake.aunis.util.minecraft.IBlockState;
@@ -58,8 +59,8 @@ public class CamoPropertiesHelper {
 			return 0;
 		}
 
-		if (!(state instanceof ExtendedBlockState))
-			state = state.getBlock().getExtendedState(state, world, pos);
+		//if (!(state instanceof ExtendedBlockState))
+        //	state = state.getBlock().getExtendedState(state, world, pos);
 
 		IBlockState camoState = ((IExtendedBlockState) state).getValue(AunisProps.CAMO_BLOCKSTATE);
 

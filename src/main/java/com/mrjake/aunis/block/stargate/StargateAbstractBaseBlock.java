@@ -106,7 +106,7 @@ public abstract class StargateAbstractBaseBlock extends BaseBlock {
         				world.playSound(pos.getX(),pos.getY(), pos.getZ(), soundtype.getBreakSound(), (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F, true);
 
                         if(!player.capabilities.isCreativeMode)
-                            stack.shrink(1);
+                            BaseUtils.shrink(stack, 1);
 
                         // If it was the last chevron/ring
                         if(posList.size() == 1)

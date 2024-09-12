@@ -217,7 +217,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 	private BiomeOverlayEnum determineBiomeOverride() {
 		ItemStack stack = itemStackHandler.getStackInSlot(BIOME_OVERRIDE_SLOT);
 
-		if (stack.isEmpty()) {
+		if (BaseUtils.isEmpty(stack)) {
 			return null;
 		}
 
@@ -305,7 +305,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 		for (int i=0; i<9; i++) {
 			BlockPos chevPos = getMergeHelper().getChevronBlocks().get(i).rotate(FacingToRotation.get(facing)).add(pos);
 
-			if (getMergeHelper().matchMember(worldObj.getBlockState(chevPos))) {
+			if (getMergeHelper().matchMember(BaseUtils.getWorldBlockState(worldObj, chevPos))) {
 				StargateClassicMemberTile memberTile = (StargateClassicMemberTile) worldObj.getTileEntity(chevPos);
 				memberTile.setLitUp(i==8 ? isFinalActive : lightUp > i);
 			}
@@ -480,25 +480,25 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 				SymbolTypeEnum symbolType = SymbolTypeEnum.valueOf(pageSlotId - 7);
 				ItemStack stack = itemStackHandler.getStackInSlot(pageSlotId);
 
-				if (stack.getItem() == AunisItems.UNIVERSE_DIALER) {
-					NBTTagList saved = stack.getTagCompound().getTagList("saved", NBT.TAG_COMPOUND);
-					NBTTagCompound compound = gateAddressMap.get(symbolType).serializeNBT();
-					compound.setBoolean("hasUpgrade", hasUpgrade(StargateUpgradeEnum.CHEVRON_UPGRADE));
-					saved.appendTag(compound);
-				}
-
-				else {
-					Aunis.LOG.debug("Giving Notebook page of address " + symbolType);
-
-					NBTTagCompound compound = PageNotebookItem.getCompoundFromAddress(
-							gateAddressMap.get(symbolType),
-							hasUpgrade(StargateUpgradeEnum.CHEVRON_UPGRADE),
-							PageNotebookItem.getRegistryPathFromWorld(worldObj, pos));
-
-					stack = new ItemStack(AunisItems.PAGE_NOTEBOOK_ITEM, 1, 1);
-					stack.setTagCompound(compound);
-					itemStackHandler.setStackInSlot(pageSlotId, stack);
-				}
+//				if (stack.getItem() == AunisItems.UNIVERSE_DIALER) {
+//					NBTTagList saved = stack.getTagCompound().getTagList("saved", NBT.TAG_COMPOUND);
+//					NBTTagCompound compound = gateAddressMap.get(symbolType).serializeNBT();
+//					compound.setBoolean("hasUpgrade", hasUpgrade(StargateUpgradeEnum.CHEVRON_UPGRADE));
+//					saved.appendTag(compound);
+//				}
+//
+//				else {
+//					Aunis.LOG.debug("Giving Notebook page of address " + symbolType);
+//
+//					NBTTagCompound compound = PageNotebookItem.getCompoundFromAddress(
+//							gateAddressMap.get(symbolType),
+//							hasUpgrade(StargateUpgradeEnum.CHEVRON_UPGRADE),
+//							PageNotebookItem.getRegistryPathFromWorld(worldObj, pos));
+//
+//					stack = new ItemStack(AunisItems.PAGE_NOTEBOOK_ITEM, 1, 1);
+//					stack.setTagCompound(compound);
+//					itemStackHandler.setStackInSlot(pageSlotId, stack);
+//				}
 
 				break;
 
@@ -605,10 +605,12 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 
 				case 7:
 				case 8:
-					return item == AunisItems.PAGE_NOTEBOOK_ITEM;
+					//return item == AunisItems.PAGE_NOTEBOOK_ITEM;
+                    return true;
 
 				case 9:
-					return item == AunisItems.PAGE_NOTEBOOK_ITEM || item == AunisItems.UNIVERSE_DIALER;
+					//return item == AunisItems.PAGE_NOTEBOOK_ITEM || item == AunisItems.UNIVERSE_DIALER;
+                    return true;
 
 				case BIOME_OVERRIDE_SLOT:
 					BiomeOverlayEnum override = AunisConfig.stargateConfig.getBiomeOverrideItemMetaPairs().get(new ItemMetaPair(stack));
@@ -724,8 +726,8 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 			for (int i=4; i<7; i++) {
 				ItemStack stack = itemStackHandler.getStackInSlot(i);
 
-				if (!stack.isEmpty()) {
-					energyStorage.addStorage(stack.getCapability(CapabilityEnergy.ENERGY, null));
+				if (!BaseUtils.isEmpty(stack)) {
+					//energyStorage.addStorage(stack.getCapability(CapabilityEnergy.ENERGY, null));
 				}
 			}
 

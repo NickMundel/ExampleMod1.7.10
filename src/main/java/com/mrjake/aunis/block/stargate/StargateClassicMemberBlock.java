@@ -1,14 +1,17 @@
 package com.mrjake.aunis.block.stargate;
 
+import com.mrjake.aunis.Aunis;
 import com.mrjake.aunis.AunisProps;
 import com.mrjake.aunis.block.AunisBlocks;
 import com.mrjake.aunis.block.DHDBlock;
+import com.mrjake.aunis.gui.GuiIdEnum;
 import com.mrjake.aunis.stargate.CamoPropertiesHelper;
 import com.mrjake.aunis.stargate.EnumMemberVariant;
 import com.mrjake.aunis.tileentity.stargate.StargateAbstractBaseTile;
 import com.mrjake.aunis.tileentity.stargate.StargateClassicMemberTile;
 import com.mrjake.aunis.util.BaseUtils;
 import com.mrjake.aunis.util.IUnlistedProperty;
+import com.mrjake.aunis.util.NonNullList;
 import com.mrjake.aunis.util.minecraft.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
@@ -146,7 +149,7 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 
 	@Override
 	public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos);
+		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 
 		if (!world.isRemote && memberTile != null) {
 			// Server and tile entity exists
@@ -156,8 +159,8 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 				boolean snowAround = DHDBlock.isSnowAroundBlock(world, pos);
 
 				// Set camo to snow or null
-				memberTile.setCamoState(snowAround ? Blocks.SNOW_LAYER.getDefaultState() : null);
-				world.setBlockState(pos, state.withProperty(AunisProps.RENDER_BLOCK, snowAround));
+				memberTile.setCamoState(null);
+                BaseUtils.setWorldBlockState(world, pos, state.withProperty(AunisProps.RENDER_BLOCK, snowAround));
 			}
 		}
 	}
@@ -171,7 +174,7 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 		Item heldItem = heldItemStack.getItem();
 		Block heldBlock = Block.getBlockFromItem(heldItemStack.getItem());
 
-		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos);
+		StargateClassicMemberTile memberTile = (StargateClassicMemberTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
 //		StargateMilkyWayBaseTile gateTile = StargateMilkyWayMergeHelper.findBaseTile(world, pos, state.getValue(AunisProps.FACING_HORIZONTAL));
 
 		if (!world.isRemote) {
@@ -196,9 +199,9 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 			if (camoBlockState != null) {
 				Block camoBlock = camoBlockState.getBlock();
 
-				if (camoBlock.getMetaFromState(camoBlockState) == heldItemStack.getMetadata()) {
+				if (BaseUtils.getMetaFromBlockState(camoBlockState) == BaseUtils.getMetaFromItemStack(heldItemStack)) {
 					if (camoBlock instanceof BlockSlab && heldBlock instanceof BlockSlab) {
-						if (((BlockSlab) camoBlock).isDouble()) {
+						if (((BlockSlab) camoBlock).isOpaqueCube()) {
 							return false;
 						}
 					}
@@ -211,16 +214,16 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 				}
 			}
 
-			if (camoBlockState != null && !(camoBlockState.getBlock() instanceof BlockSlab && heldBlock instanceof BlockSlab && !((BlockSlab) camoBlockState.getBlock()).isDouble())) {
+			if (camoBlockState != null && !(camoBlockState.getBlock() instanceof BlockSlab && heldBlock instanceof BlockSlab && !((BlockSlab) camoBlockState.getBlock()).isOpaqueCube())) {
 				Block camoBlock = camoBlockState.getBlock();
 				int quantity = 1;
 				int meta;
 
 				if (camoBlock instanceof BlockSlab) {
 					BlockSlab blockSlab = (BlockSlab) camoBlock;
-					meta = blockSlab.getMetaFromState(camoBlockState);
+					meta = BaseUtils.getMetaFromBlockState(camoBlockState);
 
-					if (blockSlab.isDouble()) {
+					if (blockSlab.isOpaqueCube()) {
 						 quantity = 2;
 
 						if (blockSlab == Blocks.double_stone_slab)
@@ -233,7 +236,7 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 				}
 
 				else {
-					meta = camoBlock.getMetaFromState(camoBlockState);
+					meta = BaseUtils.getMetaFromBlockState(camoBlockState);
 				}
 
 				if (!player.capabilities.isCreativeMode) {
@@ -251,9 +254,9 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 				Block block = null;
 				int meta;
 
-				if (camoBlockState != null && camoBlockState.getBlock() == heldBlock && camoBlockState.getBlock().getMetaFromState(camoBlockState) == heldItemStack.getMetadata()) {
+				if (camoBlockState != null && camoBlockState.getBlock() == heldBlock && BaseUtils.getMetaFromBlockState(camoBlockState) == BaseUtils.getMetaFromItemStack(heldItemStack)) {
 					BlockSlab blockSlab = (BlockSlab) camoBlockState.getBlock();
-					meta = blockSlab.getMetaFromState(camoBlockState);
+					meta = BaseUtils.getMetaFromBlockState(camoBlockState);
 
 					if (facing != EnumFacing.UP)
 						return false;
@@ -271,32 +274,32 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 					}
 
 					block = Block.getBlockFromItem(heldItemStack.getItem());
-					meta = heldItemStack.getMetadata();
+					meta = BaseUtils.getMetaFromItemStack(heldItemStack);
 				}
 
-				memberTile.setCamoState(block.getStateFromMeta(meta));
+				memberTile.setCamoState(BaseUtils.getBlockStateFromMeta(block, meta));
 
 				if (!player.capabilities.isCreativeMode)
-					heldItemStack.shrink(1);
+                    BaseUtils.shrink(heldItemStack, 1);
 
 				SoundType soundtype = block.getSoundType(block.getDefaultState(), world, pos, player);
 				world.playSound(null, pos, soundtype.getPlaceSound(), SoundCategory.BLOCKS, (soundtype.getVolume() + 1.0F) / 2.0F, soundtype.getPitch() * 0.8F);
 
-				world.setBlockState(pos, state.withProperty(AunisProps.RENDER_BLOCK, true), 0);
+                BaseUtils.setWorldBlockState(world, pos, state.withProperty(AunisProps.RENDER_BLOCK, true));
 			}
 
 			else {
-				world.setBlockState(pos, state.withProperty(AunisProps.RENDER_BLOCK, false), 0);
-			}
+                BaseUtils.setWorldBlockState(world, pos, state.withProperty(AunisProps.RENDER_BLOCK, false));
+            }
 
 			return true;
 		}
 
 		else {
 			return 	heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_MILKY_WAY_MEMBER_BLOCK) &&
-					heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_MILKY_WAY_BASE_BLOCK) &&
-					heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_UNIVERSE_BASE_BLOCK) &&
-					heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_UNIVERSE_MEMBER_BLOCK);
+					heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_MILKY_WAY_BASE_BLOCK); //&&
+					//heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_UNIVERSE_BASE_BLOCK) &&
+					//heldItem != Item.getItemFromBlock(AunisBlocks.STARGATE_UNIVERSE_MEMBER_BLOCK);
 		}
 	}
 
@@ -305,11 +308,11 @@ public abstract class StargateClassicMemberBlock extends StargateAbstractMemberB
 		if (!world.isRemote) {
 			EnumFacing facing = placer.getHorizontalFacing().getOpposite();
 
-			state = state.withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.byId((stack.getMetadata() >> 3) & 0x01))
+			state = state.withProperty(AunisProps.MEMBER_VARIANT, EnumMemberVariant.byId((BaseUtils.getMetaFromItemStack(stack) >> 3) & 0x01))
 					.withProperty(AunisProps.RENDER_BLOCK, true)
 					.withProperty(AunisProps.FACING_HORIZONTAL, facing);
 
-			world.setBlockState(pos, state);
+            BaseUtils.setWorldBlockState(world, pos, state);
 
 			StargateAbstractBaseTile gateTile = getMergeHelper().findBaseTile(world, pos, facing);
 

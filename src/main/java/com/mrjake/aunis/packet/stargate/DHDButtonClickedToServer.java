@@ -51,15 +51,15 @@ public class DHDButtonClickedToServer extends PositionedPacket {
 
 				DHDTile dhdTile = (DHDTile) world.getTileEntity(message.pos.getX(), message.pos.getY(), message.pos.getZ());
 
-				if (dhdTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0).isEmpty()) {
-					player.addChatMessage(new ChatComponentTranslation("tile.aunis.dhd_block.no_crystal_warn"));
-					return;
-				}
-
-				if (!dhdTile.isLinked()) {
-					player.addChatMessage(new ChatComponentTranslation("tile.aunis.dhd_block.not_linked_warn"));
-					return;
-				}
+//				if (dhdTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).getStackInSlot(0).isEmpty()) {
+//					player.addChatMessage(new ChatComponentTranslation("tile.aunis.dhd_block.no_crystal_warn"));
+//					return;
+//				}
+//
+//				if (!dhdTile.isLinked()) {
+//					player.addChatMessage(new ChatComponentTranslation("tile.aunis.dhd_block.not_linked_warn"));
+//					return;
+//				}
 
 				StargateMilkyWayBaseTile gateTile = (StargateMilkyWayBaseTile) dhdTile.getLinkedGate(world);
 				EnumStargateState gateState = gateTile.getStargateState();
