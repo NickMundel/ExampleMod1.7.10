@@ -1,5 +1,6 @@
 package com.mrjake.aunis.gui.container;
 
+import com.mrjake.aunis.block.AunisBlocks;
 import com.mrjake.aunis.packet.AunisPacketHandler;
 import com.mrjake.aunis.packet.StateUpdatePacketToClient;
 import com.mrjake.aunis.stargate.power.StargateClassicEnergyStorage;
@@ -40,12 +41,13 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
 	public StargateContainer(IInventory playerInventory, World world, int x, int y, int z) {
 		pos = new BlockPos(x, y, z);
 		gateTile = (StargateClassicBaseTile) world.getTileEntity(pos.getX(), pos.getY(), pos.getZ());
-		IItemHandler itemHandler = gateTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+		//IItemHandler itemHandler = gateTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+        IInventory itemHandler =  gateTile.
 
 		// Upgrades 2x2 (index 0-3)
 		for (int row=0; row<2; row++) {
 			for (int col=0; col<2; col++) {
-				addSlotToContainer(new SlotItemHandler(itemHandler, row*2+col, 9+18*col, 18+18*row));
+				addSlotToContainer(new Slot(itemHandler, row*2+col, 9+18*col, 18+18*row));
 			}
 		}
 
@@ -63,11 +65,11 @@ public class StargateContainer extends Container implements OpenTabHolderInterfa
 
 		// Page slots (index 7-9)
 		for (int i=0; i<3; i++) {
-			addSlotToContainer(new SlotItemHandler(itemHandler, i+7, -22, 89+22*i));
+			addSlotToContainer(new Slot(itemHandler, i+7, -22, 89+22*i));
 		}
 
 		// Biome overlay slot (index 10)
-		addSlotToContainer(new SlotItemHandler(itemHandler, 10, 0, 0));
+		addSlotToContainer(new Slot(itemHandler, 10, 0, 0));
 
 		for (Slot slot : ContainerHelper.generatePlayerSlots(playerInventory, 86))
 			addSlotToContainer(slot);

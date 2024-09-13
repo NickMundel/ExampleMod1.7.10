@@ -1,6 +1,7 @@
 package com.mrjake.aunis.tileentity.stargate;
 
 import com.mrjake.aunis.Aunis;
+import com.mrjake.aunis.block.AunisBlocks;
 import com.mrjake.aunis.config.AunisConfig;
 import com.mrjake.aunis.gui.container.StargateContainerGuiState;
 import com.mrjake.aunis.gui.container.StargateContainerGuiUpdate;
@@ -306,7 +307,7 @@ public abstract class StargateClassicBaseTile extends StargateAbstractBaseTile i
 			BlockPos chevPos = getMergeHelper().getChevronBlocks().get(i).rotate(FacingToRotation.get(facing)).add(pos);
 
 			if (getMergeHelper().matchMember(BaseUtils.getWorldBlockState(worldObj, chevPos))) {
-				StargateClassicMemberTile memberTile = (StargateClassicMemberTile) worldObj.getTileEntity(chevPos);
+				StargateClassicMemberTile memberTile = (StargateClassicMemberTile) worldObj.getTileEntity(chevPos.getX(), chevPos.getY(), chevPos.getZ());
 				memberTile.setLitUp(i==8 ? isFinalActive : lightUp > i);
 			}
 		}
